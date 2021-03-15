@@ -19,3 +19,12 @@ update title set tname = '인턴', tno = 6 where tno = 7;
 
 -- 해당부서에 속하는 사원목록을 검색
 select empno, empname from employee e join department d on e.dept = d.deptNo where dept = 1;
+
+
+select * from employee;
+
+select * from employee where empno = 1003;
+
+select * from employee;
+
+select empno, empname from employee e join title t on e.title = t.tno where tno = 1;

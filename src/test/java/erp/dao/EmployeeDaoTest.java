@@ -51,11 +51,13 @@ public class EmployeeDaoTest {
 		}
 	}
 	
+	@Test
 	public void Test07SelectEmployeeByTno() {
 		System.out.printf("%s()%n", "Test07SelectEmployeeByTno");
-		Title title = new Title(1);
+		Title title = new Title(2);
 		List<Employee> EmployeeList = dao.selectEmployeeByTno(title);
 		Assert.assertNotNull(EmployeeList);
+		EmployeeList.stream().forEach(System.out::println);
 	}
 	
 

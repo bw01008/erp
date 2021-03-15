@@ -13,7 +13,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import erp.UI.exception.NotSelectedException;
-import erp.dto.Title;
 
 //공통된 부분 추출해서 만든 추상클래스
 
@@ -37,7 +36,6 @@ public abstract class AbstractCustomTablePanel<T> extends JPanel {
 	//데이터를 모두 읽어와서 리스트 > 배열 > 모델을 테이블에 달아준다.
 	public void loadData() {
 		initList();	//selectAll된 데이터를 list에 담는것만 하는 메소드
-		System.out.println(list);
 		setList();	
 	}
 	

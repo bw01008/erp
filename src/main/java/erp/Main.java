@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import erp.UI.DepartmentManager;
-import erp.UI.EmployeeManager;
 import erp.UI.TitleManager;
 
 @SuppressWarnings("serial")
@@ -67,9 +66,6 @@ public class Main extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == btnEmployee) {
-			actionPerformedBtnEmployee(arg0);
-		}
 		if (arg0.getSource() == btnDepartment) {
 			actionPerformedBtnDepartment(arg0);
 		}
@@ -85,8 +81,5 @@ public class Main extends JFrame implements ActionListener {
 		DepartmentManager frame = new DepartmentManager();
 		frame.setVisible(true);
 	}
-	protected void actionPerformedBtnEmployee(ActionEvent arg0) {
-		EmployeeManager frame = new EmployeeManager();
-		frame.setVisible(true);
-	}
+
 }

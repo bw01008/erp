@@ -3,15 +3,15 @@ package erp.UI.content;
 import java.awt.GridLayout;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import erp.UI.exception.InvalidCheckException;
 import erp.dto.Department;
 
 @SuppressWarnings("serial")
-public class DeptPanel extends JPanel {
+public class DeptPanel extends InterfaceItem<Department> {
 	private JTextField tfDeptNo;
 	private JTextField tfDeptName;
 	private JTextField tfFloor;
@@ -20,7 +20,7 @@ public class DeptPanel extends JPanel {
 		initialize();
 	}
 
-	private void initialize() {
+	public void initialize() {
 		// TitleBorder설정
 		setBorder(new TitledBorder(null, "부서정보", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		// 레이아웃 설정
@@ -57,26 +57,64 @@ public class DeptPanel extends JPanel {
 		add(tfFloor);
 	}
 
-	//텍스트 필드에 부서 정보 설정해주는 메소드 > 매개변수로 받은 객체의 필드값으로 설정해준다
-	public void setDepartment(Department department) {
-//		tfDeptNo.setText(String.valueOf(department.getDeptNo()));
-		tfDeptNo.setText(department.getDeptNo() + "");
-		tfDeptName.setText(department.getDeptName());
-		tfFloor.setText(department.getFloor() + "");
+//	//텍스트 필드에 부서 정보 설정해주는 메소드 > 매개변수로 받은 객체의 필드값으로 설정해준다
+//	public void setDepartment(Department department) {
+////		tfDeptNo.setText(String.valueOf(department.getDeptNo()));
+//		tfDeptNo.setText(department.getDeptNo() + "");
+//		tfDeptName.setText(department.getDeptName());
+//		tfFloor.setText(department.getFloor() + "");
+//	}
+//
+//	//인스턴스 필드값으로 만든 객체를 반환해주는 메소드
+//	public Department getDepartment() {
+//		int deptNo = Integer.parseInt(tfDeptNo.getText().trim());
+//		String deptName = tfDeptName.getText().trim();
+//		int floor = Integer.parseInt(tfFloor.getText().trim());
+//		return new Department(deptNo, deptName, floor);
+//	}
+//	
+////	private void validCheck() {
+////		if(tfDeptNo.)
+////	}
+
+	// 텍스트필드 안을 공란으로 만들어주는 메소드
+	@Override
+	public void clearTf() {
+		tfDeptNo.setText("");
+		tfDeptName.setText("");
+		tfFloor.setText("");
+		
+		if(!tfDeptNo.isEditable()) {
+			tfDeptNo.setEditable(true);
+		}
 	}
 
-	//인스턴스 필드값으로 만든 객체를 반환해주는 메소드
-	public Department getDepartment() {
+	@Override
+	public void setItem(Department item) {
+		tfDeptNo.setText(String.valueOf(item.getDeptNo()));
+//		tfDeptNo.setText(item.getDeptNo() + "");
+		tfDeptName.setText(item.getDeptName());
+		tfFloor.setText(item.getFloor() + "");
+
+		tfDeptNo.setEditable(false);
+	}
+
+	@Override
+	public Department getItem() {
+		validCheck();
 		int deptNo = Integer.parseInt(tfDeptNo.getText().trim());
 		String deptName = tfDeptName.getText().trim();
 		int floor = Integer.parseInt(tfFloor.getText().trim());
 		return new Department(deptNo, deptName, floor);
 	}
 
-	//텍스트필드 안을 공란으로 만들어주는 메소드
-	public void clearTf() {
-		tfDeptNo.setText("");
-		tfDeptName.setText("");
-		tfFloor.setText("");
+	@Override
+	public void validCheck() {
+		if (tfDeptNo.getText().contentEquals("") 
+				|| tfDeptName.getText().equals("") 
+				|| tfFloor.getText().equals("")) {
+			throw new InvalidCheckException();
+		}
+
 	}
 }

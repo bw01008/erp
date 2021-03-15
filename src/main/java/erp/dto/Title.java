@@ -39,10 +39,32 @@ public class Title {
 		this.tname = tname;
 	}
 	
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + tno;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Title other = (Title) obj;
+		if (tno != other.tno)
+			return false;
+		return true;
+	}
 	//toString Override
 	@Override
 	public String toString() {
-		return String.format("Title [tno=%s, tname=%s]", tno, tname);
+		return String.format("%s(%d)", tname, tno);
 	}
 
 }

@@ -13,9 +13,11 @@ public class TitleService {
 	private TitleDao dao = TitleDaoImpl.getInstance();	//메소드들에 접근
 	private EmployeeDao daoEmp = EmployeeDaoImpl.getInstance();
 	
-	public List<Title> showTitles(){
-		return dao.selectTitleByAll();
-	}
+//	public List<Title> showTitles(){
+//		List<Title> list = dao.selectTitleByAll();
+//		System.out.println(list);
+//		return list;
+//	}
 	
 	public void addTitle(Title title) {
 		dao.insertTitle(title);
@@ -31,6 +33,10 @@ public class TitleService {
 	
 	public List<Employee> showEmployee(Title title) {
 		return daoEmp.selectEmployeeByTno(title);
+	}
+
+	public List<Title> showTitle(){
+		return dao.selectTitleByAll();
 	}
 	
 	

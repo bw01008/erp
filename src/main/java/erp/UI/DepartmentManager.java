@@ -153,7 +153,7 @@ public class DepartmentManager extends JFrame implements ActionListener {
 		Department newDept = pContent.getDepartment(); // 텍스트필드에 있는 정보로 객체 생성해서 가져온다.
 		service.addDepartment(newDept);
 		JOptionPane.showMessageDialog(null, newDept.getDeptName() + "부서가 추가되었습니다.");
-		pList.loadData();
+		pList.loadData();	// 추가 후 loadData()메소드를 꼭 호출해줘야 반영된다.
 		pContent.clearTf();
 	}
 

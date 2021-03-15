@@ -37,6 +37,7 @@ public abstract class AbstractCustomTablePanel<T> extends JPanel {
 	//데이터를 모두 읽어와서 리스트 > 배열 > 모델을 테이블에 달아준다.
 	public void loadData() {
 		initList();	//selectAll된 데이터를 list에 담는것만 하는 메소드
+		System.out.println(list);
 		setList();	
 	}
 	
@@ -53,20 +54,20 @@ public abstract class AbstractCustomTablePanel<T> extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 
 		table = new JTable();
-		table.setModel(getModel());
+//		table.setModel(getModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 	}// end of initialize()
 
-	public DefaultTableModel getModel() {
-		// 2차배열과 배열(을 반환하는 메소드)을 매개변수로 하는 생성자 호출
-		CustomTableModel model = new CustomTableModel(getData(), getColumnNames());
-		return model;
-	}
+//	public DefaultTableModel getModel() {
+//		// 2차배열과 배열(을 반환하는 메소드)을 매개변수로 하는 생성자 호출
+//		CustomTableModel model = new CustomTableModel(getData(), getColumnNames());
+//		return model;
+//	}
 
-	public Object[][] getData() {
-		return new Object[][] { { null, null, null }, };
-	}// end of getData
+//	public Object[][] getData() {
+//		return new Object[][] { { null, null, null }, };
+//	}// end of getData
 
 	// 컬럼명, 개수가 다르기때문에 하위클래스에서 정의하도록 추상메소드로 만들고 구현부 삭제 > 추상클래스 선언
 	public abstract String[] getColumnNames();

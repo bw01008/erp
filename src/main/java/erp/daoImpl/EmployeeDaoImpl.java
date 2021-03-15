@@ -59,6 +59,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		Employee manager = null;
 		int salary = 0;
 		Department dept = null;
+		
 		try {
 			empno = rs.getInt("empno");
 		}catch(SQLException e) {}

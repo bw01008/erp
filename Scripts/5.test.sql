@@ -28,3 +28,17 @@ select * from employee where empno = 1003;
 select * from employee;
 
 select empno, empname from employee e join title t on e.title = t.tno where tno = 1;
+
+
+
+
+-- pass 길이 확인(비밀번호 password char(41))
+-- 단방향 함수(Hash:MD5)
+-- 해쉬함수의 특징은 키값을 찾아내는것이 힘들다. 결과값을 동일하지만 찾아가기가 힘들다.
+-- 길이 상관없이 무조건 길이 41개로 출력된다.
+select password ('aaa'), length(password ('*A02AA727CF2E8C5E6F07A382910C4028D65A053A')) from dual;	-- 해쉬함수(단방향함수)
+
+
+
+
+

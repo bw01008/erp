@@ -38,6 +38,12 @@ select empno, empname from employee e join title t on e.title = t.tno where tno 
 -- 길이 상관없이 무조건 길이 41개로 출력된다.
 select password ('aaa'), length(password ('*A02AA727CF2E8C5E6F07A382910C4028D65A053A')) from dual;	-- 해쉬함수(단방향함수)
 
+INSERT INTO erp.emp_detail
+(empno, pic, gender, hiredate, pass)
+VALUES(?, ?, ?, ?, ?);
+
+select * from emp_detail;
+delete from emp_detail where empno = 1003;
 
 
 

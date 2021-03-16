@@ -1,6 +1,5 @@
 package erp.dto;
 
-import java.util.Arrays;
 import java.util.Date;
 
 public class EmployeeDetail {
@@ -72,7 +71,7 @@ public class EmployeeDetail {
 	@Override
 	public String toString() {
 		return String.format("EmpDetail [empNo=%s, gender=%s, hireDate=%s, pic=%s]", empNo, gender, hireDate,
-				Arrays.toString(pic));
+				pic.length);
 	}
 
 }

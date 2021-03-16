@@ -8,7 +8,7 @@ import erp.Service.EmployeeService;
 import erp.UI.List.AbstractCustomTablePanel;
 import erp.UI.List.EmployeeTablePanel;
 import erp.UI.content.AbstractContentPanel;
-import erp.UI.content.EmpPanel;
+import erp.UI.content.EmployeePanel;
 import erp.dto.Employee;
 
 @SuppressWarnings("serial")
@@ -30,7 +30,7 @@ public class EmployeeManagerUI extends AbstractManagerUI<Employee> {
 
 	@Override
 	protected AbstractContentPanel<Employee> createContentPanel() {
-		EmpPanel EmpPanel = new EmpPanel();
+		EmployeePanel EmpPanel = new EmployeePanel();
 		EmpPanel.setService(service);	//패널에도 서비스가 필요하기 떄문에 
 		return EmpPanel;
 	}

@@ -9,7 +9,7 @@ import erp.Service.DepartmentService;
 import erp.UI.List.AbstractCustomTablePanel;
 import erp.UI.List.DepartmentTablePanel;
 import erp.UI.content.AbstractContentPanel;
-import erp.UI.content.DeptPanel;
+import erp.UI.content.DepartmentPanel;
 import erp.dto.Department;
 import erp.dto.Employee;
 
@@ -32,7 +32,7 @@ public class DepartmentManagerUI extends AbstractManagerUI<Department> {
 
 	@Override
 	protected AbstractContentPanel<Department> createContentPanel() {
-		return new DeptPanel();
+		return new DepartmentPanel();
 	}
 
 	@Override

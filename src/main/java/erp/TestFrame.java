@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 
 import erp.Service.EmployeeService;
 import erp.UI.List.EmployeeTablePanel;
-import erp.UI.content.EmpPanel;
+import erp.UI.content.EmployeePanel;
 import erp.dto.Department;
 import erp.dto.Employee;
 import erp.dto.Title;
@@ -24,7 +24,7 @@ public class TestFrame extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JButton btnAdd;
 
-	private EmpPanel pEmpItem;
+	private EmployeePanel pEmpItem;
 	private JButton btnSet;
 	private JButton btnCancel;
 	private EmployeeTablePanel pList;
@@ -65,7 +65,7 @@ public class TestFrame extends JFrame implements ActionListener {
 //		pDept.loadData();
 //		contentPane.add(pDept);
 
-		pEmpItem = new EmpPanel();
+		pEmpItem = new EmployeePanel();
 		pEmpItem.setService(service);
 		contentPane.add(pEmpItem);
 

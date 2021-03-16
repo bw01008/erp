@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import erp.UI.exception.SqlConstraintException;
 import erp.dao.EmployeeDao;
 import erp.database.JdbcConn;
 import erp.dto.Department;
@@ -148,9 +149,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			pstmt.setInt(6, emp.getDept().getDeptNo());
 			return pstmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SqlConstraintException(e.getMessage(), e);
 		}
-		return 0;
 	}
 
 	@Override
@@ -172,17 +172,30 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return 0;
 	}
 
+//	@Override
+//	public int deleteEmployee(int empno) {
+//		String sql = "delete from employee where empno = ?";
+//		try (Connection con = JdbcConn.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+//			pstmt.setInt(1, empno);
+//			return pstmt.executeUpdate();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return 0;
+//	}
+	
 	@Override
-	public int deleteEmployee(int empno) {
+	public int deleteEmployee(Employee emp) {
 		String sql = "delete from employee where empno = ?";
 		try (Connection con = JdbcConn.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-			pstmt.setInt(1, empno);
+			pstmt.setInt(1, emp.getEmpno());
 			return pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return 0;
 	}
+	
 
 	@Override
 	public List<Employee> selectEmployeeByDeptno(Department dept) {
@@ -225,5 +238,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		}
 		return null;
 	}
+
+
 
 }// end of class

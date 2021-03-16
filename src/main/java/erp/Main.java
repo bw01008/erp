@@ -10,8 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import erp.UI.DepartmentManager;
-import erp.UI.TitleManager;
+import erp.UI.DepartmentManagerUI;
+import erp.UI.EmployeeManagerUI;
+import erp.UI.TitleManagerUI;
 
 @SuppressWarnings("serial")
 public class Main extends JFrame implements ActionListener {
@@ -72,13 +73,23 @@ public class Main extends JFrame implements ActionListener {
 		if (arg0.getSource() == btnTitle) {
 			actionPerformedBtnTitle(arg0);
 		}
+		if (arg0.getSource() == btnEmployee) {
+			actionPerformedBtnEmployee(arg0);
+		}
 	}
 	protected void actionPerformedBtnTitle(ActionEvent arg0) {
-		TitleManager frame = new TitleManager();
+		TitleManagerUI frame = new TitleManagerUI();
+		frame.setTitle("직책 관리");
 		frame.setVisible(true);
 	}
 	protected void actionPerformedBtnDepartment(ActionEvent arg0) {
-		DepartmentManager frame = new DepartmentManager();
+		DepartmentManagerUI frame = new DepartmentManagerUI();
+		frame.setTitle("부서 관리");
+		frame.setVisible(true);
+	}
+	protected void actionPerformedBtnEmployee(ActionEvent arg0) {
+		EmployeeManagerUI frame = new EmployeeManagerUI();
+		frame.setTitle("사원 관리");
 		frame.setVisible(true);
 	}
 

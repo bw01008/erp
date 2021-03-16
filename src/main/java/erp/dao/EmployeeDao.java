@@ -17,7 +17,9 @@ public interface EmployeeDao {
 	// update 추상메서드
 	int updateEmployee(Employee emp);
 	// delete 추상메서드
-	int deleteEmployee(int empno);
+//	int deleteEmployee(int empno);
+
+	int deleteEmployee(Employee emp);
 	
 	//해당 부서에 속하는 사원목록을 검색
 	List<Employee> selectEmployeeByDeptno(Department dept);

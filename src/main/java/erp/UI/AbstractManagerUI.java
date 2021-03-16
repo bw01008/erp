@@ -25,7 +25,7 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 	protected JButton btnAdd;	//하위에서 접근하여 버튼 이름을 변경해야하기때문에 private > protected로 바꿔줬다. 
 	private JButton btnCancel;
 
-	protected AbstractContentPanel<T> pContent; // 
+	protected AbstractContentPanel<T> pContent; 
 	protected AbstractCustomTablePanel<T> pList;
 
 	public AbstractManagerUI() {
@@ -66,7 +66,7 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 		JPopupMenu popupMenu = createPopupMenu(); // 팝업메뉴 생성하는 메소드 따로 만들어서 호출)
 		pList.setPopupMenu(popupMenu); // pList에 달아주지 않으면 UI에서 동작하지 않는다. 까먹을 수 있으니 꼭 기억하자
 	}
-
+	
 	protected abstract void tableLoadData();
 
 	protected abstract AbstractContentPanel<T> createContentPanel();

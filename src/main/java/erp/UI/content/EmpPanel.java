@@ -25,7 +25,7 @@ import erp.dto.Employee;
 import erp.dto.Title;
 
 @SuppressWarnings("serial")
-public class EmpPanel extends AbstractContent<Employee> implements ItemListener {
+public class EmpPanel extends AbstractContentPanel<Employee> implements ItemListener {
 	private JTextField tfEmpno;
 	private JTextField tfEmpname;
 	private JComboBox<Title> cmbTitle; // 콤보박스에 지네릭을 설정해줘야 연동하기 쉽다. 그렇지 않으면 String으로 추가해줘야해서 번거롭다

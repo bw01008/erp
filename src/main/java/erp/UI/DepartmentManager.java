@@ -15,7 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import erp.Service.DepartmentService;
 import erp.UI.List.DepartmentTablePanel;
-import erp.UI.content.AbstractContent;
+import erp.UI.content.AbstractContentPanel;
 import erp.UI.content.DeptPanel;
 import erp.UI.exception.InvalidCheckException;
 import erp.UI.exception.NotSelectedException;
@@ -29,7 +29,7 @@ public class DepartmentManager extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JButton btnAdd;
 	private JButton btnCancel;
-	private AbstractContent<Department> pContent;
+	private AbstractContentPanel<Department> pContent;
 	private JPanel pBtn;
 	private DepartmentTablePanel pList;
 	private DepartmentService service;

@@ -11,7 +11,7 @@ import erp.UI.exception.InvalidCheckException;
 import erp.dto.Department;
 
 @SuppressWarnings("serial")
-public class DeptPanel extends AbstractContent<Department> {
+public class DeptPanel extends AbstractContentPanel<Department> {
 	private JTextField tfDeptNo;
 	private JTextField tfDeptName;
 	private JTextField tfFloor;

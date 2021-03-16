@@ -11,7 +11,7 @@ import erp.dto.Title;
 import erp.UI.exception.InvalidCheckException;
 
 @SuppressWarnings("serial")
-public class TitlePanel extends InterfaceItem<Title> {
+public class TitlePanel extends AbstractContent<Title> {
 	protected JTextField tfTno;
 	protected JTextField tfTname;
 

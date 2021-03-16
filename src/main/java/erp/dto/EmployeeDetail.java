@@ -6,7 +6,7 @@ public class EmployeeDetail {
 	//Field
 	private int empNo;
 	private boolean gender;
-	private Date hireDate;
+	private Date hireDate;	//날짜 형식 타입
 	private String pass;
 	private byte[] pic; // 이미지는 0101로 저장되기때문에 바이트 배열이다.
 	
@@ -17,6 +17,14 @@ public class EmployeeDetail {
 
 	public EmployeeDetail(int empNo) {
 		this.empNo = empNo;
+	}
+
+	//password 없는 생성자 
+	public EmployeeDetail(int empNo, boolean gender, Date hireDate, byte[] pic) {
+		this.empNo = empNo;
+		this.gender = gender;
+		this.hireDate = hireDate;
+		this.pic = pic;
 	}
 
 	public EmployeeDetail(int empNo, boolean gender, Date hireDate, String pass, byte[] pic) {
@@ -71,7 +79,7 @@ public class EmployeeDetail {
 	@Override
 	public String toString() {
 		return String.format("EmpDetail [empNo=%s, gender=%s, hireDate=%s, pic=%s]", empNo, gender, hireDate,
-				pic.length);
+				pic.length);	
 	}
 
 }

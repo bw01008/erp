@@ -53,10 +53,11 @@ ALTER TABLE erp.Employee
 
 -- 세부정보
 CREATE TABLE erp.emp_detail (
-	empno    INT        NULL COMMENT '사원번호', -- 사원번호
-	pic      LONGBLOB   NULL COMMENT '증명사진', -- 증명사진
-	gender   TINYINT(1) NULL COMMENT '성별', -- 성별
-	hiredate DATE       NULL COMMENT '입사일' -- 입사일
+	empno    INT        	NULL COMMENT '사원번호', -- 사원번호
+	pic      LONGBLOB   	NULL COMMENT '증명사진', -- 증명사진
+	gender   TINYINT(1) 	NULL COMMENT '성별', -- 성별
+	hiredate DATETIME       NULL COMMENT '입사일', -- 입사일
+	pass     CHAR(41)  		NULL COMMENT '비밀번호' -- 비밀번호 --비밀번호 타입의 경우 char타입의 41글자로 설정해준다.
 )
 COMMENT '세부정보';
 

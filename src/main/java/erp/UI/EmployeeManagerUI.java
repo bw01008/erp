@@ -15,6 +15,12 @@ import erp.dto.Employee;
 public class EmployeeManagerUI extends AbstractManagerUI<Employee> {
 	
 	private EmployeeService service;
+	
+	
+	public EmployeeManagerUI() {
+		empListByTitleItem.setText(AbstractManagerUI.EMP_MENU);
+		
+	}
 
 	@Override
 	protected void setService() {

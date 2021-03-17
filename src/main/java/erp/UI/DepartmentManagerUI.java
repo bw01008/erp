@@ -18,6 +18,12 @@ public class DepartmentManagerUI extends AbstractManagerUI<Department> {
 	
 	private DepartmentService service;
 	
+	
+	
+	public DepartmentManagerUI() {
+		empListByTitleItem.setText(AbstractManagerUI.DEPT_MENU);
+	}
+
 	@Override
 	protected void setService() {
 		service = new DepartmentService();

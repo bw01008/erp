@@ -17,6 +17,11 @@ import erp.dto.Title;
 public class TitleManagerUI extends AbstractManagerUI<Title> {
 
 	private TitleService service;	//받아오는 service클래스가 다르기때문에 하위에 선언해준다.
+	
+	
+	public TitleManagerUI() {
+		empListByTitleItem.setText(AbstractManagerUI.TITLE_MENU);
+	}
 
 	@Override
 	protected void setService() {

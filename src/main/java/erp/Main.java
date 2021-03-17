@@ -21,6 +21,9 @@ public class Main extends JFrame implements ActionListener {
 	private JButton btnTitle;
 	private JButton btnDepartment;
 	private JButton btnEmployee;
+	private TitleManagerUI titlFrame;
+	private DepartmentManagerUI deptFrame;
+	private EmployeeManagerUI empFrame;
 
 	/**
 	 * Launch the application.
@@ -38,12 +41,24 @@ public class Main extends JFrame implements ActionListener {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Main() {
+		
 		initialize();
+		createFrame();	//  버튼을 여러번 눌렀을 때 단일한 프레임만 띄워진다.(버튼 누를때마다 프레임이 생기는 문제 해결)
+
 	}
+
+	public void createFrame() {
+		titlFrame = new TitleManagerUI();
+		titlFrame.setTitle("직책 관리");
+		
+		deptFrame = new DepartmentManagerUI();
+		deptFrame.setTitle("부서 관리");
+		
+		empFrame = new EmployeeManagerUI();
+		empFrame.setTitle("사원 관리");
+	}
+	
 	private void initialize() {
 		setTitle("emp Management");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,19 +93,16 @@ public class Main extends JFrame implements ActionListener {
 		}
 	}
 	protected void actionPerformedBtnTitle(ActionEvent arg0) {
-		TitleManagerUI frame = new TitleManagerUI();
-		frame.setTitle("직책 관리");
-		frame.setVisible(true);
+		
+		titlFrame.setVisible(true);
 	}
 	protected void actionPerformedBtnDepartment(ActionEvent arg0) {
-		DepartmentManagerUI frame = new DepartmentManagerUI();
-		frame.setTitle("부서 관리");
-		frame.setVisible(true);
+		
+		deptFrame.setVisible(true);
 	}
 	protected void actionPerformedBtnEmployee(ActionEvent arg0) {
-		EmployeeManagerUI frame = new EmployeeManagerUI();
-		frame.setTitle("사원 관리");
-		frame.setVisible(true);
+		
+		empFrame.setVisible(true);
 	}
 
 }

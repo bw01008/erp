@@ -27,6 +27,11 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 
 	protected AbstractContentPanel<T> pContent; 
 	protected AbstractCustomTablePanel<T> pList;
+	protected JMenuItem empListByTitleItem;
+	//상수로 선언
+	protected static final String TITLE_MENU = "동일직책 사원보기"; 
+	protected static final String DEPT_MENU = "동일부서 사원보기"; 
+	protected static final String EMP_MENU = "사원 세부정보 보기"; 
 
 	public AbstractManagerUI() {
 
@@ -95,7 +100,7 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 		deleteItem.addActionListener(this);
 		popupMenu.add(deleteItem);
 
-		JMenuItem empListByTitleItem = new JMenuItem("동일직책 사원보기");
+		empListByTitleItem = new JMenuItem("동일직책 사원보기");
 		empListByTitleItem.addActionListener(this);
 		popupMenu.add(empListByTitleItem);
 
@@ -116,7 +121,9 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 					actionPerformedMenuUpdate(); // 수정시 수행하는 코드를 메소드로 뻈다.
 				}
 				// 동일직책 사원보기
-				if (e.getActionCommand().equals("동일직책 사원보기")) {
+				if (e.getActionCommand().contentEquals(AbstractManagerUI.TITLE_MENU) ||
+					e.getActionCommand().contentEquals(AbstractManagerUI.DEPT_MENU) ||
+					e.getActionCommand().contentEquals(AbstractManagerUI.EMP_MENU)) {
 					/*
 					 * 1. EmployeeDao -> selectEmployeeByTitle() 추가 2. EmployeeDaoImpl ->
 					 * selectEmployeeByTitle() 구현 3. EmployeeDaoTest -> Test하기 4. TitleService ->
@@ -125,6 +132,7 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 					 */
 					actionPerformedMenuGubun(); // 동일직책 사원보기 시 수행하는 코드를 메소드로 뺐다.
 				}
+			
 			} else {
 				if (e.getSource() == btnCancel) {
 					actionPerformedBtnCancel(e);

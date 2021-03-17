@@ -1,20 +1,26 @@
 package erp.UI;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import erp.Service.EmployeeDetailService;
 import erp.Service.EmployeeService;
 import erp.UI.List.AbstractCustomTablePanel;
 import erp.UI.List.EmployeeTablePanel;
 import erp.UI.content.AbstractContentPanel;
+import erp.UI.content.EmployeeDetailPanel;
 import erp.UI.content.EmployeePanel;
 import erp.dto.Employee;
+import erp.dto.EmployeeDetail;
 
 @SuppressWarnings("serial")
 public class EmployeeManagerUI extends AbstractManagerUI<Employee> {
 	
 	private EmployeeService service;
+	private EmployeeDetailService detailService;
 	
 	
 	public EmployeeManagerUI() {
@@ -25,7 +31,7 @@ public class EmployeeManagerUI extends AbstractManagerUI<Employee> {
 	@Override
 	protected void setService() {
 		service = new EmployeeService();
-		
+		detailService = new EmployeeDetailService();
 	}
 
 	@Override
@@ -48,8 +54,26 @@ public class EmployeeManagerUI extends AbstractManagerUI<Employee> {
 
 	@Override
 	protected void actionPerformedMenuGubun() {
-		//사원관리에서 따로 제공하지 않는 기능이다.(필요없음)
-		throw new UnsupportedOperationException("제공되지 않음");
+		// 사원 상세 정보보기 메뉴 선택할때 동작하는 코드
+		Employee emp = pList.getItem();
+//		System.out.println(emp);	//잘 넘어오는지 확인
+		EmployeeDetail empDetail = detailService.selectEmployeeDetailByEmpNo(emp);
+//		System.out.println(empDetail);	//사번1003만 넘어오고 나머지는 null > 상세정보 추가하시겠습니까? 기능 추가필요
+		if(empDetail==null) {
+			JOptionPane.showMessageDialog(null, "세부정보 없음");
+			return;
+		}
+		
+		JFrame subFrame = new JFrame("사원 세부 정보");
+		
+		subFrame.setBounds(this.getWidth(), this.getHeight(), 450, 500);
+		EmployeeDetailPanel subDetailPanel = new EmployeeDetailPanel();
+		
+		subDetailPanel.setItem(empDetail);
+		
+		subFrame.add(subDetailPanel, BorderLayout.CENTER);
+		
+		subFrame.setVisible(true);
 		
 	}
 

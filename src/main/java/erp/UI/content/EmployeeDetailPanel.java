@@ -4,13 +4,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
@@ -30,6 +36,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.toedter.calendar.JDateChooser;
 
 import erp.UI.exception.InvalidCheckException;
+import erp.dto.Employee;
 import erp.dto.EmployeeDetail;
 
 @SuppressWarnings("serial")
@@ -37,13 +44,13 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 
 	private JPasswordField pfPass1;
 	private JPasswordField pfPass2;
-	private String imgPath = System.getProperty("user.dir") + File.separator + "image" + File.separator; // 이미지경로지정
-	private JFileChooser chooserPath = new JFileChooser(System.getProperty("user.dir"));
 	private JLabel lblPic;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JButton btnAddPic;
 	private JLabel lblConfirm;
 	private JDateChooser dateHire;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private String imgPath = System.getProperty("user.dir") + File.separator + "image" + File.separator; // 이미지경로지정
+	private JFileChooser chooserPath = new JFileChooser(System.getProperty("user.dir"));
 
 	public EmployeeDetailPanel() {
 		initialize();
@@ -52,7 +59,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 
 	private void loadPic(String imgFilePath) {
 		Image changeImage = null;
-		if (imgPath == null) {
+		if (imgFilePath == null) {
 			ImageIcon icon = new ImageIcon(imgPath + "noimage.jpg"); // 이미지 받아와서 아이콘 생성
 			changeImage = icon.getImage().getScaledInstance(100, 150, Image.SCALE_SMOOTH); // 이미지 사이즈 조정
 		} else {
@@ -91,6 +98,15 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		pItem.add(pContent);
 		pContent.setLayout(new GridLayout(0, 2, 10, 0));
 
+		JLabel lblEmpno = new JLabel("사원번호");
+		lblEmpno.setHorizontalAlignment(SwingConstants.RIGHT);
+		pContent.add(lblEmpno);
+
+		tfEmpno = new JTextField();
+		tfEmpno.setEditable(false); // 편집불가하게 변경
+		pContent.add(tfEmpno);
+		tfEmpno.setColumns(10);
+
 		JLabel lblHireDate = new JLabel("입사일");
 		lblHireDate.setHorizontalAlignment(SwingConstants.RIGHT);
 		pContent.add(lblHireDate);
@@ -111,7 +127,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		buttonGroup.add(rdbtnFemale); // 버튼 그룹 묶어야 배타성이 부여된다.(디자인에서 라디오 버튼 모두 선택한 상태로 우클릭 > 버튼그룹 > 스탠다드)
 		pGender.add(rdbtnFemale);
 
-		JRadioButton rdbtnMale = new JRadioButton("남자");
+		rdbtnMale = new JRadioButton("남자");
 		buttonGroup.add(rdbtnMale); // 버튼 그룹 묶어야 배타성이 부여된다.(디자인에서 라디오 버튼 모두 선택한 상태로 우클릭 > 버튼그룹 > 스탠다드)
 		pGender.add(rdbtnMale);
 
@@ -141,21 +157,58 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		pContent.add(lblConfirm);
 	}
 
+	public void setTfEmpno(Employee employee) {
+		tfEmpno.setText(String.valueOf(employee.getEmpno()));
+	}
+
 	@Override
 	public void setItem(EmployeeDetail item) {
-		// TODO Auto-generated method stub
+		tfEmpno.setText(String.valueOf(item.getEmpNo()));
+		byte[] iconBytes = item.getPic();
+		ImageIcon icon = new ImageIcon(iconBytes);
+		lblPic.setIcon(icon);
+		dateHire.setDate(item.getHireDate());
+		if (item.isGender()) {
+			rdbtnFemale.setSelected(true);
+		} else {
+			rdbtnMale.setSelected(true);
+		}
 
 	}
 
 	@Override
 	public EmployeeDetail getItem() {
-		// TODO Auto-generated method stub
+		validCheck();
+		int empNo = Integer.parseInt(tfEmpno.getText().trim());
+		boolean gender = rdbtnFemale.isSelected() ? true : false; // 삼항연산자 사용
+		Date hireDate = dateHire.getDate();
+		String pass = String.valueOf(pfPass1.getPassword());
+		byte[] pic = getImage();
+		return new EmployeeDetail(empNo, gender, hireDate, pass, pic);
+	}
+
+	private byte[] getImage() {
+
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			ImageIcon icon = (ImageIcon) lblPic.getIcon(); // 아이콘을 이미지 아이콘으로 형변환해준다.
+			BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB); // 임시공간을
+																															// 만들어주겠다.
+			// 레이블에 있는 사진을 이미지로 만들어주는 코드
+			Graphics2D g2 = bi.createGraphics(); // 임시공간에서 읽어와서 이미지를 만들겠다
+			g2.drawImage(icon.getImage(), 0, 0, null);
+			g2.dispose();
+
+			ImageIO.write(bi, "png", baos);
+			return baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public void validCheck() {
-		if (lblConfirm.getText().equals("일치")) {
+		if (!lblConfirm.getText().equals("일치")) {
 			throw new InvalidCheckException("비밀번호 불일치");
 		}
 	}
@@ -226,4 +279,6 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		}
 	};
 	private JRadioButton rdbtnFemale;
+	private JTextField tfEmpno;
+	private JRadioButton rdbtnMale;
 }

@@ -81,14 +81,14 @@ public class EmployeeDetailDaoTest {
 	}
 
 //	@Test
-//	public void test04DeleteEmployeeDetail() {
-//		System.out.printf("%s()%n", "test03DeleteEmployeeDetail");
-//		Employee employee = new Employee(1003);
-//		int res = dao.deleteEmployeeDetail(employee);
-//		Assert.assertEquals(1, res);
-//		
-//		EmployeeDetail employeeDetail = dao.selectEmployeeDatailByNo(new Employee(1003));
-//		Assert.assertNull(employeeDetail);
-//	}
+	public void test04DeleteEmployeeDetail() {
+		System.out.printf("%s()%n", "test03DeleteEmployeeDetail");
+		Employee employee = new Employee(1003);
+		int res = dao.deleteEmployeeDetail(employee);
+		Assert.assertEquals(1, res);
+		
+		EmployeeDetail employeeDetail = dao.selectEmployeeDatailByNo(new Employee(1003));
+		Assert.assertNull(employeeDetail);
+	}
 
 }

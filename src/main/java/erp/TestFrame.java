@@ -11,13 +11,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import erp.Service.EmployeeDetailService;
 import erp.Service.EmployeeService;
 import erp.UI.List.EmployeeTablePanel;
-import erp.UI.content.EmployeePanel;
-import erp.dto.Department;
-import erp.dto.Employee;
-import erp.dto.Title;
 import erp.UI.content.EmployeeDetailPanel;
+import erp.dto.Employee;
+import erp.dto.EmployeeDetail;
 
 @SuppressWarnings("serial")
 public class TestFrame extends JFrame implements ActionListener {
@@ -26,6 +25,9 @@ public class TestFrame extends JFrame implements ActionListener {
 	private EmployeeTablePanel pList;
 	private EmployeeService service;
 	private EmployeeDetailPanel panel;
+	private JPanel panel_1;
+	private JButton btnGet;
+	private JButton btnSet;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -61,10 +63,28 @@ public class TestFrame extends JFrame implements ActionListener {
 
 		
 		panel = new EmployeeDetailPanel();
+		panel.setTfEmpno(new Employee(1003));
 		contentPane.add(panel);
+		
+		panel_1 = new JPanel();
+		contentPane.add(panel_1);
+		
+		btnGet = new JButton("가져오기");
+		btnGet.addActionListener(this);
+		panel_1.add(btnGet);
+		
+		btnSet = new JButton("불러오기");
+		btnSet.addActionListener(this);
+		panel_1.add(btnSet);
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSet) {
+			actionPerformedBtnSet(e);
+		}
+		if (e.getSource() == btnGet) {
+			actionPerformedBtnGet(e);
+		}
 		try {
 
 		} catch (Exception e1) {
@@ -74,4 +94,14 @@ public class TestFrame extends JFrame implements ActionListener {
 	}
 
 
+	protected void actionPerformedBtnGet(ActionEvent e) {
+		EmployeeDetail employeeDetail = panel.getItem();
+		JOptionPane.showMessageDialog(null, employeeDetail);
+	}
+	protected void actionPerformedBtnSet(ActionEvent e) {
+		EmployeeDetailService service = new EmployeeDetailService();
+		EmployeeDetail empDetail = service.selectEmployeeDetailByEmpNo(new Employee(1003));
+		panel.setItem(empDetail);
+		
+	}
 }

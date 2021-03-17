@@ -41,22 +41,34 @@ public class EmployeePanel extends AbstractContentPanel<Employee> implements Ite
 	}
 
 	public void setService(EmployeeService service) {
+		
 		this.service = service;
-		// service객체를 통해 호출된 메소드로 반환받은 리스트를 조건에 맞춰 (리스트 > 벡터 > 모델)
+		
+		//<부서 콤보박스 연동>
+		// service객체를 통해 호출된 부서를 모두 가져오는 select 수행하는 메소드 호출해서 List로 받아오기
+		// 반환받은 리스트를 조건에 맞춰 (리스트 > 벡터 > 모델)
+		// 콤보박스에 모델 달아주기
+		// 기본적으로 선택 전에는 보이지 않게 설정
 		List<Department> deptList = service.showDeptList();
 		DefaultComboBoxModel<Department> deptModel = new DefaultComboBoxModel<>(new Vector<>(deptList));
 		cmbDept.setModel(deptModel);
-
+		cmbDept.setSelectedIndex(-1); 
+		
+		//<직책 콤보박스 연동>
+		//service객체를 통해 호출된 직책을 모두 가져오는 select 수행하는 메소드를 호출해서 List로 받아오기
+		// 반환받은 리스트를 벡터로 생성 후, 모델을 생성해준다.
+		//콤보박스에 모델 달아주기
+		// 기본적으로 선택 전에는 보이지 않게 설정
 		List<Title> titleList = service.showTitleList();
 		DefaultComboBoxModel<Title> titleModel = new DefaultComboBoxModel<>(new Vector<>(titleList));
 		cmbTitle.setModel(titleModel);
+		cmbTitle.setSelectedIndex(-1);
 
+		//<직속상사 콤보박스 연동> > 부서가 먼저 선택되면 그 부서의 사원들만 직속상사 콤보박스에 보이는게 좋지 않을까? > 부서 콤보박스 선택되면 수행되는 메소드에 코드 작성
 //		List<Employee> managerList = service.showEmployeeListByDept((Department) cmbDept.getSelectedItem());;
 //		DefaultComboBoxModel<Employee> managerModel = new DefaultComboBoxModel<>(new Vector<>(managerList));
 //		cmbManager.setModel(managerModel);
 
-		cmbDept.setSelectedIndex(-1); // 기본적으로 선택전에는 보이지 않게 설정
-		cmbTitle.setSelectedIndex(-1);
 
 	}
 
@@ -116,33 +128,31 @@ public class EmployeePanel extends AbstractContentPanel<Employee> implements Ite
 		pItem.add(spinnerSalary);
 
 	}
-	
-	@Override
-	public void clearTf() {
-		tfEmpno.setText("");
-		tfEmpname.setText("");
-		cmbDept.setSelectedIndex(-1);
-		cmbTitle.setSelectedIndex(-1);
-		cmbManager.setSelectedIndex(-1);
-		spinnerSalary.setValue(1500000);
-	}
 
 	public void itemStateChanged(ItemEvent arg0) {
 		if (arg0.getSource() == cmbDept) {
 			itemStateChangedCmbDept(arg0);
 		}
 	}
-
+	
+	//부서 콤보박스에서 선택이 되었을 때 동작하는 메소드
 	protected void itemStateChangedCmbDept(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
+			
+			//cmbDept에서 선택된 부서의 Department 가져오기
 			Department selDept = (Department) cmbDept.getSelectedItem();
+			//선택된 부서에 속하는 사원들을 select하는 메소드를 호출하고 List로 받아온다.
 			List<Employee> managerList = service.showEmployeeListByDept(selDept);
-			//직속 상사가 없는 경우 추가
-			if(managerList == null) {
+			
+			// 해당부서에 사원이 없을 경우(직속상사 콤보박스에 가져올 사원이 없다면 빈 List 생성)
+			if (managerList == null) {
 				managerList = new ArrayList<>();
 			}
+			//선택된 부서에 속하는 사원들의 List로 벡터를 생성 후, 모델 생성
 			DefaultComboBoxModel<Employee> managerModel = new DefaultComboBoxModel<>(new Vector<>(managerList));
+			//직속상사 콤보박스에 모델 달아주기
 			cmbManager.setModel(managerModel);
+			// 기본적으로 선택 전에는 보이지 않게 설정
 			cmbManager.setSelectedIndex(-1);
 		}
 
@@ -150,11 +160,11 @@ public class EmployeePanel extends AbstractContentPanel<Employee> implements Ite
 
 	@Override
 	public void setItem(Employee item) {
-		//set하고자 하는 Employee객체의 각 필드 중 사용자 지정 타입일때(Title, Department, Employee)
-		//받아오는 매개변수와 비교할 수 있도록 dto에 equals를 생성해줘야한다.
+		// set하고자 하는 Employee객체의 각 필드 중 사용자 지정 타입일 때(Title, Department, Employee)
+		// 받아오는 매개변수와 비교할 수 있도록 dto에 equals를 생성해줘야한다.
 		tfEmpname.setText(item.getEmpname());
 		tfEmpno.setText(item.getEmpno() + "");
-		cmbTitle.setSelectedItem(item.getTitle()); //title dto에 가서 title tno를 equals를 생성해줘야한다.
+		cmbTitle.setSelectedItem(item.getTitle()); // title dto에 가서 title tno를 equals를 생성해줘야한다.
 		cmbDept.setSelectedItem(item.getDept());
 		cmbManager.setSelectedItem(item.getManager());
 		spinnerSalary.setValue(item.getSalary());
@@ -163,9 +173,12 @@ public class EmployeePanel extends AbstractContentPanel<Employee> implements Ite
 
 	@Override
 	public Employee getItem() {
+		// 유효성 검사
 		validCheck();
+		// 텍스트 필드에 입력된 부분을 String 형태로 변환 후 가져오기
 		int empno = Integer.parseInt(tfEmpno.getText().trim());
 		String empname = tfEmpname.getText().trim();
+		// 콤보박스에서 선택된 부분을 객체의 형태로 변환 후 가져오기
 		Title title = (Title) cmbTitle.getSelectedItem(); // 선택된 객체를 가져온다.
 		Employee manager = (Employee) cmbManager.getSelectedItem();
 		int salary = (int) spinnerSalary.getValue();
@@ -175,14 +188,23 @@ public class EmployeePanel extends AbstractContentPanel<Employee> implements Ite
 
 	@Override
 	public void validCheck() {
+		// 유효성 검사 : 텍스트 필드가 공백이거나 콤보박스에 선택된 항목이 없으면 입력을 유도
 		if (tfEmpno.getText().contentEquals("") || tfEmpname.getText().contentEquals("")
-				|| (cmbDept.getSelectedIndex() == -1) 
-				|| (cmbManager.getSelectedIndex() == -1)
+				|| (cmbDept.getSelectedIndex() == -1) || (cmbManager.getSelectedIndex() == -1)
 				|| (cmbTitle.getSelectedIndex() == -1)) {
 			throw new InvalidCheckException();
 		}
 
 	}
 
+	@Override
+	public void clearTf() {
+		tfEmpno.setText("");
+		tfEmpname.setText("");
+		cmbDept.setSelectedIndex(-1);
+		cmbTitle.setSelectedIndex(-1);
+		cmbManager.setSelectedIndex(-1);
+		spinnerSalary.setValue(1500000);
+	}
 
 }

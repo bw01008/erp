@@ -77,44 +77,49 @@ public class DepartmentPanel extends AbstractContentPanel<Department> {
 ////		if(tfDeptNo.)
 ////	}
 
-	// 텍스트필드 안을 공란으로 만들어주는 메소드
-	@Override
-	public void clearTf() {
-		tfDeptNo.setText("");
-		tfDeptName.setText("");
-		tfFloor.setText("");
-		
-		if(!tfDeptNo.isEditable()) {
-			tfDeptNo.setEditable(true);
-		}
-	}
-
 	@Override
 	public void setItem(Department item) {
+		//매개변수로 받아온 department의 요소들을 String형태로 변환 후 수정할 수 있도록 텍스트 필드에 세팅
 		tfDeptNo.setText(String.valueOf(item.getDeptNo()));
-//		tfDeptNo.setText(item.getDeptNo() + "");
 		tfDeptName.setText(item.getDeptName());
 		tfFloor.setText(item.getFloor() + "");
-
+		//deptNo는 수정할 수 없도록 설정해줘야한다.
 		tfDeptNo.setEditable(false);
 	}
-
+	
 	@Override
 	public Department getItem() {
+		//유효성 체크
 		validCheck();
+		//텍스트 필드에 작성된 것들을 Department클래스 필드에 선언된 타입에 맞춰 형변환해서 가져오기
 		int deptNo = Integer.parseInt(tfDeptNo.getText().trim());
 		String deptName = tfDeptName.getText().trim();
 		int floor = Integer.parseInt(tfFloor.getText().trim());
 		return new Department(deptNo, deptName, floor);
 	}
-
+	
 	@Override
 	public void validCheck() {
+		//유효성 체크 : 해당 텍스트 필드 중 하나라도 공백일 경우, 입력을 유도하는 예외처리
 		if (tfDeptNo.getText().contentEquals("") 
 				|| tfDeptName.getText().equals("") 
 				|| tfFloor.getText().equals("")) {
 			throw new InvalidCheckException();
 		}
-
+		
 	}
+	
+	@Override
+	public void clearTf() {
+		// DepartmentPanel 초기화
+		tfDeptNo.setText("");
+		tfDeptName.setText("");
+		tfFloor.setText("");
+		
+		//deptNo텍스트 필드 비활성화 풀기
+		if(!tfDeptNo.isEditable()) {
+			tfDeptNo.setEditable(true);
+		}
+	}
+
 }

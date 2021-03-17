@@ -78,8 +78,8 @@ public class EmployeeDetail {
 
 	@Override
 	public String toString() {
-		return String.format("EmpDetail [empNo=%s, gender=%s, hireDate=%s, pic=%s]", empNo, gender, hireDate,
-				pic.length);	
+		return String.format("EmpDetail [empNo=%s, gender=%s, hireDate=%s, pic=%s]", 
+				empNo, gender, hireDate,pic.length);	
 	}
 
 }

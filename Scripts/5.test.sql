@@ -50,6 +50,7 @@ INSERT INTO erp.emp_detail
 VALUES(?, ?, ?, ?, ?);
 
 select empno, pic, gender, hiredate, pass from emp_detail;
+select * from employee;
 
 delete from emp_detail where empno = 1003;
 update emp_detail set gender = true where empno = 1003;
@@ -57,4 +58,7 @@ update emp_detail set gender = true where empno = 1003;
 -- new EmployeeDetail(1003, true, new Date(), "1234", getImage("noimage.jpg"));
 update emp_detail set empno = 1003 pic = ?, gender = ?, hiredate = ? where = 1003";
 
+select * from employee;
 
+delete from employee where empname = '짱수린2';
+update employee set manager = '3011' where empname = '짱수린2'; 

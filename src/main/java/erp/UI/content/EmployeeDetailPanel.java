@@ -44,25 +44,34 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 
 	private JPasswordField pfPass1;
 	private JPasswordField pfPass2;
-	private JLabel lblPic;
-	private JButton btnAddPic;
-	private JLabel lblConfirm;
-	private JDateChooser dateHire;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
+
 	private String imgPath = System.getProperty("user.dir") + File.separator + "image" + File.separator; // 이미지경로지정
 	private JFileChooser chooserPath = new JFileChooser(System.getProperty("user.dir"));
+	
+	private JLabel lblPic;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JButton btnAddPic;
+	private JDateChooser dateHire;
+	private JRadioButton rdbtnFemale;
+	private JLabel lblConfirm;
+	private JTextField tfEmpno;
+	private JRadioButton rdbtnMale;
 
+	
 	public EmployeeDetailPanel() {
 		initialize();
 		loadPic(null);
 	}
-
+	
+	
 	private void loadPic(String imgFilePath) {
 		Image changeImage = null;
+			//이미지 파일없을 경우,
 		if (imgFilePath == null) {
 			ImageIcon icon = new ImageIcon(imgPath + "noimage.jpg"); // 이미지 받아와서 아이콘 생성
 			changeImage = icon.getImage().getScaledInstance(100, 150, Image.SCALE_SMOOTH); // 이미지 사이즈 조정
 		} else {
+			//이미지 파일 있을 경우,
 			ImageIcon icon = new ImageIcon(imgFilePath); // 이미지 받아와서 아이콘 생성
 			changeImage = icon.getImage().getScaledInstance(100, 150, Image.SCALE_SMOOTH); // 이미지 사이즈 조정
 		}
@@ -71,8 +80,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 	}
 
 	private void initialize() {
-		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "사원 세부 정보", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
+		setBorder(new TitledBorder(null, "사원 세부 정보", TitledBorder.LEADING,TitledBorder.TOP, null, null));
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel pTop = new JPanel();
@@ -103,7 +111,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		pContent.add(lblEmpno);
 
 		tfEmpno = new JTextField();
-		tfEmpno.setEditable(false); // 편집불가하게 변경
+		tfEmpno.setEditable(false); // 사원번호는 수정불가하게 비활성화
 		pContent.add(tfEmpno);
 		tfEmpno.setColumns(10);
 
@@ -111,7 +119,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		lblHireDate.setHorizontalAlignment(SwingConstants.RIGHT);
 		pContent.add(lblHireDate);
 
-		dateHire = new JDateChooser(new Date());
+		dateHire = new JDateChooser(new Date());	//선택 전에는 오늘 날짜로 초기화
 		dateHire.setDateFormatString("yyyy.MM.dd");
 		pContent.add(dateHire);
 
@@ -150,7 +158,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		JPanel pSpace = new JPanel();
 		pContent.add(pSpace);
 
-		lblConfirm = new JLabel("New label");
+		lblConfirm = new JLabel();
 		lblConfirm.setFont(new Font("굴림", Font.BOLD, 20));
 		lblConfirm.setForeground(Color.RED);
 		lblConfirm.setHorizontalAlignment(SwingConstants.CENTER);
@@ -188,7 +196,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 	}
 
 	private byte[] getImage() {
-
+		//load된 이미지를 DB에 반영 > 
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			ImageIcon icon = (ImageIcon) lblPic.getIcon(); // 아이콘을 이미지 아이콘으로 형변환해준다.
 			BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB); // 임시공간을
@@ -208,6 +216,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 
 	@Override
 	public void validCheck() {
+		//비밀번호와 비밀번호 확인 비교 후 불일치시, 비밀번호 불일치 예외처리
 		if (!lblConfirm.getText().equals("일치")) {
 			throw new InvalidCheckException("비밀번호 불일치");
 		}
@@ -215,6 +224,11 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 
 	@Override
 	public void clearTf() {
+		//이미지파일 선택안된 상태로 초기화 > noImage가 들어가있다.
+		//날짜는 오늘 날짜로 초기화
+		//성별은 여자선택으로 초기화
+		//비밀번호 텍스트필드 공백 초기화
+		//일치, 불일치 확인하는 레이블 공백 초기화
 		loadPic(null);
 		dateHire.setDate(new Date());
 		rdbtnFemale.setSelected(true);
@@ -229,24 +243,28 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 			actionPerformedBtnAddPic(arg0);
 		}
 	}
-
+	//사진 추가 버튼을 눌렀을 때 사진 파일을 찾을 수 있도록 JFileChooser가 뜨도록 하는 메소드
 	protected void actionPerformedBtnAddPic(ActionEvent arg0) {
-		// 파일 필터 객체 생성 > 보이는 파일의 유형을 결정한다.
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & PNG & GIF images", "jpg", "png", "gif"); // 설명과
-																														// 확장자
-		chooserPath.setFileFilter(filter);
-		chooserPath.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		// 파일 필터 객체 생성 > 노출되고자하는 파일의 유형을 결정한다.
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & PNG & GIF images", "jpg", "png", "gif"); // 설명과 확장자
+																														
+		chooserPath.setFileFilter(filter);	//파일 필터 적용
+		chooserPath.setFileSelectionMode(JFileChooser.FILES_ONLY);	// 디렉토리와 파일 중 파일만 선택할 수 있도록 설정
 
 		// 열기 다이얼로그 출력
 		int res = chooserPath.showOpenDialog(null);
+		//파일선택 하지 않고 창닫기, 혹은 취소했을 때
 		if (res != JFileChooser.APPROVE_OPTION) {
 			JOptionPane.showMessageDialog(null, "파일을 선택하지 않았습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
+		//선택된 파일 경로 가져오기
 		String chooseFilePath = chooserPath.getSelectedFile().getPath();
+		//사진 설정해주는 메소드의 매개변수로 경로 넘겨주기
 		loadPic(chooseFilePath);
 	}
-
+	
+	//비밀번호 일치, 불일치 비교하는 메소드
 	DocumentListener listener = new DocumentListener() {
 
 		@Override
@@ -268,6 +286,7 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 		}
 
 		private void getMessage() {
+			// 입력된 비밀번호 텍스트 필드값으로 String 객체 생성 후 비교
 			String pass1 = new String(pfPass1.getPassword());
 			String pass2 = new String(pfPass2.getPassword());
 
@@ -278,7 +297,5 @@ public class EmployeeDetailPanel extends AbstractContentPanel<EmployeeDetail> im
 			}
 		}
 	};
-	private JRadioButton rdbtnFemale;
-	private JTextField tfEmpno;
-	private JRadioButton rdbtnMale;
+
 }

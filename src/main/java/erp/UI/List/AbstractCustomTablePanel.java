@@ -14,8 +14,6 @@ import javax.swing.table.TableColumnModel;
 
 import erp.UI.exception.NotSelectedException;
 
-//공통된 부분 추출해서 만든 추상클래스
-
 @SuppressWarnings("serial")
 public abstract class AbstractCustomTablePanel<T> extends JPanel {
 	protected JTable table;
@@ -23,16 +21,17 @@ public abstract class AbstractCustomTablePanel<T> extends JPanel {
 	
 	public AbstractCustomTablePanel() {
 		initialize();
-		
 	}
 	
-	public T getItem() {
+	//테이블에서 선택된 row(객체)를 가져오는 메소드 > 추상메소드로 바꾸어 하위에서 구현하도록했다.
+	public abstract T getItem(); /*{
 		int idx = table.getSelectedRow();	//만약 선택이 안되면 -1을 리턴한다
 		if(idx == -1) {
 			throw new NotSelectedException();
 		}
 		return	list.get(idx);
-	}
+	}*/
+	
 	//데이터를 모두 읽어와서 리스트 > 배열 > 모델을 테이블에 달아준다.
 	public void loadData() {
 		initList();	//selectAll된 데이터를 list에 담는것만 하는 메소드
@@ -55,7 +54,7 @@ public abstract class AbstractCustomTablePanel<T> extends JPanel {
 //		table.setModel(getModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
-	}// end of initialize()
+	}
 
 //	public DefaultTableModel getModel() {
 //		// 2차배열과 배열(을 반환하는 메소드)을 매개변수로 하는 생성자 호출
@@ -93,10 +92,9 @@ public abstract class AbstractCustomTablePanel<T> extends JPanel {
 	
 	protected abstract void setAlignAndWidth();
 
-	//추상메서드 선언
 	public abstract Object[] toArray(T t);
 
-	
+	//가변배열을 매개변수로 받는다
 	protected void setTableCellWidth(int... width) {
 		TableColumnModel tcm = table.getColumnModel();
 

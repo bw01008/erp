@@ -31,7 +31,7 @@ public class DepartmentService {
 		dao.updateDepartment(dept);
 	}
 	
-	public List<Employee> showEmployee(Department dept){
+	public List<Employee> showEmployeeGroupByDepartment(Department dept){
 		return empDao.selectEmployeeByDeptno(dept);
 	}
 

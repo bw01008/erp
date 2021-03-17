@@ -155,8 +155,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
 	@Override
 	public int updateEmployee(Employee emp) {
-		String sql = "update employee " + "set empname = ?, title = ?, manager = ?, salary = ?, dept = ? "
-				+ "where empno = ?";
+		String sql = "update employee set empname = ?, title = ?, manager = ?, salary = ?, dept = ? where empno = ?";
 		try (Connection con = JdbcConn.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setString(1, emp.getEmpname());
 			pstmt.setInt(2, emp.getTitle().getTno());
@@ -187,7 +186,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	@Override
 	public int deleteEmployee(Employee emp) {
 		String sql = "delete from employee where empno = ?";
-		try (Connection con = JdbcConn.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+		try (Connection con = JdbcConn.getConnection(); 
+				PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setInt(1, emp.getEmpno());
 			return pstmt.executeUpdate();
 		} catch (SQLException e) {

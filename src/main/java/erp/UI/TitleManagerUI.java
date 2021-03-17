@@ -16,16 +16,15 @@ import erp.dto.Title;
 @SuppressWarnings("serial")
 public class TitleManagerUI extends AbstractManagerUI<Title> {
 
-	private TitleService service;	//받아오는 service클래스가 다르기때문에 하위에 선언해준다.
-	
-	
-	public TitleManagerUI() {
-		empListByTitleItem.setText(AbstractManagerUI.TITLE_MENU);
-	}
+	private TitleService service; // 받아오는 service클래스가 다르기때문에 하위에 선언해준다.
 
 	@Override
 	protected void setService() {
 		service = new TitleService();
+	}
+	
+	public TitleManagerUI() {
+		empListByTitleItem.setText(AbstractManagerUI.TITLE_MENU);		//상위클래스에 선언된 상수 호출
 	}
 
 	@Override
@@ -54,13 +53,14 @@ public class TitleManagerUI extends AbstractManagerUI<Title> {
 		 * EmployeeDaoImpl field 추가 및 메서드 추가 5. 아래 기능 추가 6. 예외찾아서 추가하기 (신규 직책 추가 시
 		 * NullPointException)
 		 */
-		Title t = pList.getItem(); // 선택된 Title 객체를 받는다.
-		List<Employee> selectedList = service.showEmployee(t); // 선택된 title을 가지는 employee를 List로 반환
+		Title t = pList.getItem(); // 1. 테이블에서 선택된 Title 객체를 가져오기
+		List<Employee> selectedList = service.showEmployee(t); // 2. 선택된 title을 가지는 employee를 List로 반환(service연결)
+		// 선택한 직책과 동일한 사원이 없을 시,
 		if (selectedList == null) {
 			JOptionPane.showMessageDialog(null, "해당하는 사원이 없습니다.", "동일 직책 사원", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-
+		// 동일 직책 사원 출력해주는 팝업창 띄우기
 		String list = null;
 		for (Employee emp : selectedList) {
 			list = emp.toString();
@@ -69,31 +69,40 @@ public class TitleManagerUI extends AbstractManagerUI<Title> {
 	}
 
 	@Override
+	// 수정 : 팝업메뉴에서 수정버튼("이걸 수정할래~")
 	protected void actionPerformedMenuUpdate() {
-		Title upTitle = pList.getItem(); // 선택된 항목 객체로 받아오기
-		pContent.setItem(upTitle); // 텍스트필드에 선택된 객체 가져오기
-		btnAdd.setText("수정"); // 추가버튼을 수정버튼으로 바꾼다.
+		// 1. 테이블에서 선택된 직책 객체로 받아오기
+		// 2. 선택된 객체를 ContentPanel에 수정할 수 있도록 가져오기
+		// 3. 추가버튼을 수정버튼으로 바꾼다.
+		Title upTitle = pList.getItem();
+		pContent.setItem(upTitle);
+		btnAdd.setText("수정");
 	}
 
 	@Override
+	// 삭제
 	protected void actionPerformedMenuDelete() {
-		Title delTitle = pList.getItem(); // 선택한 직책을 객체로 받아온다.
-		service.removeTitle(delTitle); // 삭제하는 쿼리문을 실행하는 메소드를 불러온다(service)
-		pList.loadData(); // 선택된 직책이 삭제된 후 데이터를 새로 읽어와서 반영한다.
+		// 1. 테이블에서 선택된 직책을 객체로 받아온다.
+		// 2. 서비스와 연동해서 선택된 객체를 삭제하는 메소드를 호출
+		// *** 3. 선택된 직책이 삭제된 후 데이터를 새로 읽어와서 테이블에 반영한다.
+		Title delTitle = pList.getItem();
+		service.removeTitle(delTitle);
+		pList.loadData();
 		JOptionPane.showMessageDialog(null, delTitle + " 삭제되었습니다.");
 	}
 
 	@Override
+	// 수정 : JFrame에 만들어 둔 수정버튼(contentPane에 작성한걸 반영해줘~)
 	protected void actionPerformedBtnUpdate(ActionEvent e) {
 		// pContent에서 수정된 title 가져오기
 		// update 수행
-		// pList 갱신
+		// pList 갱신***(까먹기 쉽다)
 		// pContent clearTf()호출하여 초기화
 		// btnAdd 텍스트 변경 수정->추가
 
-		Title updateTitle = pContent.getItem(); // 텍스트필드에 작성된 텍스트를 이용해 객체를 생성해서 반환받는다.
-		service.modifyTitle(updateTitle); // 수정하는 쿼리문을 실행하는 메소드를 호출한다.
-		pList.loadData(); // 쿼리문이 적용된 후에 데이터를 다시 읽어와서 반영한다.
+		Title updateTitle = pContent.getItem();
+		service.modifyTitle(updateTitle);
+		pList.loadData();
 		pContent.clearTf();
 		btnAdd.setText("추가");
 		JOptionPane.showMessageDialog(null, updateTitle.getTname() + "정보가 수정 완료되었습니다.");
@@ -101,10 +110,15 @@ public class TitleManagerUI extends AbstractManagerUI<Title> {
 	}
 
 	@Override
+	// 추가 : 버튼 눌렀을 때
 	protected void actionPerformedBtnAdd(ActionEvent e) {
-		Title title = pContent.getItem(); // 텍스트필드에 작성된 텍스트를 가져와서 객체 생성해서 반환받는다.
-		service.addTitle(title); // 데이터 추가하는 쿼리문을 실행하는 메소드를 호출
-		pList.loadData(); // 쿼리문 적용된 후에 데이터를 다시 읽어와서 반영한다.
+		// pContent에서 추가된 title 가져오기
+		// insert(add)수행
+		// pList갱신
+		// pContent clearTf()호출하여 초기화
+		Title title = pContent.getItem();
+		service.addTitle(title);
+		pList.loadData();
 		pContent.clearTf();
 		JOptionPane.showMessageDialog(null, title + "추가했습니다.");
 	}

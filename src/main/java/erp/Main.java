@@ -43,8 +43,8 @@ public class Main extends JFrame implements ActionListener {
 
 	public Main() {
 		
-		initialize();
 		createFrame();	//  버튼을 여러번 눌렀을 때 단일한 프레임만 띄워진다.(버튼 누를때마다 프레임이 생기는 문제 해결)
+		initialize();
 
 	}
 

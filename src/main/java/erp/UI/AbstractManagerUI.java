@@ -25,9 +25,9 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 	protected JButton btnAdd;	//하위에서 접근하여 버튼 이름을 변경해야하기때문에 private > protected로 바꿔줬다. 
 	private JButton btnCancel;
 
-	protected AbstractContentPanel<T> pContent; 
-	protected AbstractCustomTablePanel<T> pList;
-	protected JMenuItem empListByTitleItem;
+	protected AbstractContentPanel<T> pContent; 	//ContentPanel 조립
+	protected AbstractCustomTablePanel<T> pList; 	//TablePanel 조립
+	protected JMenuItem empListByTitleItem;//?????????????????????????????????????????????
 	//상수로 선언
 	protected static final String TITLE_MENU = "동일직책 사원보기"; 
 	protected static final String DEPT_MENU = "동일부서 사원보기"; 
@@ -37,10 +37,21 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 
 		setService(); // 1. 서비스 연결
 		initialize(); // 2. 컴포넌트 초기화
-		tableLoadData(); // 3. 데이터 불러오기
+		tableLoadData(); // 3. 데이터 불러오기(component load data)
 	}
-
+	
 	protected abstract void setService(); // 추상메소드로 뺀다. 하위에서 서비스알아서 불러라
+	protected abstract void tableLoadData();
+	protected abstract AbstractContentPanel<T> createContentPanel();	//ContentPanel 조립
+	protected abstract AbstractCustomTablePanel<T> createTablePanel();	//TablePanel 조립
+	
+	protected abstract void actionPerformedMenuGubun();
+	protected abstract void actionPerformedMenuUpdate();
+	protected abstract void actionPerformedMenuDelete();
+	protected abstract void actionPerformedBtnUpdate(ActionEvent e);
+	protected abstract void actionPerformedBtnAdd(ActionEvent e);
+
+	
 	
 	private void initialize() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -65,28 +76,13 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 		pBtn.add(btnCancel);
 
 		pList = createTablePanel(); // 메소드로 뺀다.
-
 		contentPane.add(pList);
 
 		JPopupMenu popupMenu = createPopupMenu(); // 팝업메뉴 생성하는 메소드 따로 만들어서 호출)
 		pList.setPopupMenu(popupMenu); // pList에 달아주지 않으면 UI에서 동작하지 않는다. 까먹을 수 있으니 꼭 기억하자
 	}
 	
-	protected abstract void tableLoadData();
 
-	protected abstract AbstractContentPanel<T> createContentPanel();
-
-	protected abstract AbstractCustomTablePanel<T> createTablePanel();
-	
-	protected abstract void actionPerformedMenuGubun();
-
-	protected abstract void actionPerformedMenuUpdate();
-
-	protected abstract void actionPerformedMenuDelete();
-	
-	protected abstract void actionPerformedBtnUpdate(ActionEvent e);
-
-	protected abstract void actionPerformedBtnAdd(ActionEvent e);
 
 	// 우클릭했을 때 팝업메뉴가 뜬다.
 	private JPopupMenu createPopupMenu() {
@@ -122,8 +118,8 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 				}
 				// 동일직책 사원보기
 				if (e.getActionCommand().contentEquals(AbstractManagerUI.TITLE_MENU) ||
-					e.getActionCommand().contentEquals(AbstractManagerUI.DEPT_MENU) ||
-					e.getActionCommand().contentEquals(AbstractManagerUI.EMP_MENU)) {
+						e.getActionCommand().contentEquals(AbstractManagerUI.DEPT_MENU) ||
+						e.getActionCommand().contentEquals(AbstractManagerUI.EMP_MENU)) {
 					/*
 					 * 1. EmployeeDao -> selectEmployeeByTitle() 추가 2. EmployeeDaoImpl ->
 					 * selectEmployeeByTitle() 구현 3. EmployeeDaoTest -> Test하기 4. TitleService ->
@@ -155,13 +151,13 @@ public abstract class AbstractManagerUI<T> extends JFrame implements ActionListe
 			e1.printStackTrace();
 		}
 	}
+	
 
-	// 수정버튼을 눌렀을 때 실행되는 메소드
 
-
+	//취소버튼을 눌렀을 때 contentPanel을 clear해주는 메소드
 	protected void actionPerformedBtnCancel(ActionEvent e) {
 		pContent.clearTf();
-
+		// 추가버튼이 수정으로 바뀌어있을 때 추가로 다시 변경
 		if (btnAdd.getText().contentEquals("수정")) {
 			btnAdd.setText("추가");
 		}

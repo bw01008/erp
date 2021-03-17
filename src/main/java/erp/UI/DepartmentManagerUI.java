@@ -2,6 +2,7 @@ package erp.UI;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -15,24 +16,23 @@ import erp.dto.Employee;
 
 @SuppressWarnings("serial")
 public class DepartmentManagerUI extends AbstractManagerUI<Department> {
-	
+
 	private DepartmentService service;
-	
-	
-	
-	public DepartmentManagerUI() {
-		empListByTitleItem.setText(AbstractManagerUI.DEPT_MENU);
-	}
 
 	@Override
 	protected void setService() {
 		service = new DepartmentService();
-		
+	}
+	
+	public DepartmentManagerUI() {
+		empListByTitleItem.setText(AbstractManagerUI.DEPT_MENU);	//상위클래스에 선언된 상수 호출
 	}
 
 	@Override
 	protected void tableLoadData() {
-		((DepartmentTablePanel)pList).setService(service); // 패널도 프레임에 생성된 service 객체를 쓸 수 있게 해준다.
+		// 패널도 프레임에 생성된 service 객체를 쓸 수 있게 해준다.
+		((DepartmentTablePanel)pList).setService(service);
+		// 데이터를 읽어와서 리스트 > 배열 > 모델로 만들어서 테이블에 달아주는 메소드를 pList에 호출하게 되면 UI에 데이터가 반영된다.
 		pList.loadData();
 	}
 
@@ -55,18 +55,25 @@ public class DepartmentManagerUI extends AbstractManagerUI<Department> {
 		 * NullPointException)
 		 */
 		Department dept = pList.getItem();
-		List<Employee> selectedList = service.showEmployee(dept);
+		List<Employee> selectedList = service.showEmployeeGroupByDepartment(dept);
+		
 		if (selectedList == null) {
-			JOptionPane.showMessageDialog(null, dept.getDeptName() + "부서에 속하는 사원이 존재하지 않습니다.", "동일 부서 사원",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "해당 사원 없음", "동일 부서 사원",JOptionPane.INFORMATION_MESSAGE);
 			return; // <<return이 왜 나오는지???
 		}
+		//내가 짠 코드
+//		String list = null;
+//		for (Employee emp : selectedList) {
+//			list = emp.toString();
+//		}
+//		JOptionPane.showMessageDialog(null, list, "해당 부서 사원", JOptionPane.INFORMATION_MESSAGE);
+		
+		//선생님코드
+		List<String> strList = selectedList.parallelStream().map(s -> {
+			return String.format("%s(%d)", s.getEmpname(), s.getEmpno());
+		}).collect(Collectors.toList());
 
-		String list = null;
-		for (Employee emp : selectedList) {
-			list = emp.toString();
-		}
-		JOptionPane.showMessageDialog(null, list, "해당 부서 사원", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, strList, "동일 부서 사원", JOptionPane.INFORMATION_MESSAGE);		
 	}
 
 	@Override
@@ -78,15 +85,18 @@ public class DepartmentManagerUI extends AbstractManagerUI<Department> {
 
 	@Override
 	protected void actionPerformedMenuDelete() {
-		Department delDept = pList.getItem();// 선택된 항목을 객체로 가져온다.
-		service.removeDepartment(delDept);// 삭제쿼리문을 동작하는 메소드를 호출해서 데이터를 삭제한다.
+		// 테이블에서 선택된 department 가져오기
+		// delete 수행
+		// pList 갱신
+		Department delDept = pList.getItem();
+		service.removeDepartment(delDept);
 		pList.loadData();
 		JOptionPane.showMessageDialog(null, delDept.getDeptName() + "부서가 삭제되었습니다.");
 	}
 
 	@Override
 	protected void actionPerformedBtnUpdate(ActionEvent e) {
-		// pContent에서 수정된 title 가져오기
+		// pContent에서 수정된 department 가져오기
 		// update 수행
 		// pList 갱신
 		// pContent clearTf()호출하여 초기화
@@ -101,9 +111,13 @@ public class DepartmentManagerUI extends AbstractManagerUI<Department> {
 
 	@Override
 	protected void actionPerformedBtnAdd(ActionEvent e) {
-		Department addDept = pContent.getItem(); // 텍스트필드에 있는 정보로 객체 생성해서 가져온다.
+		//pContent에서 작성된 department 가져오기
+		//insert(add) 수행
+		//pList 갱신
+		//pContent clearTf() 호출하여 초기화
+		Department addDept = pContent.getItem();
 		service.addDepartment(addDept);
-		pList.loadData(); // 추가 후 loadData()메소드를 꼭 호출해줘야 반영된다.
+		pList.loadData();
 		pContent.clearTf();
 		JOptionPane.showMessageDialog(null, addDept.getDeptName() + "부서가 추가되었습니다.");
 	}
